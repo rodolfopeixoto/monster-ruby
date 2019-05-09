@@ -25,19 +25,19 @@ class Necessity
   end
 
   def time_hygiene
-    return @hygiene *= 2 if level_max_two_item?(@food, @fun) && level_item_smaller_three_and_greater_zero?(@hygiene)
+    return @hygiene *= 2 if level_duplicate?(@food, @fun, @hygiene)
     return @hygiene += 1 if level_max_different_than?(@food, @fun) && @hygiene < 4
     return @hygiene += 1 if level_max_two_item?(@food, @fun) && level_item_equal_three_or_zero?(@hygiene)
   end
 
   def time_fun
-    return @fun *= 2 if level_max_two_item?(@hygiene, @food) && level_item_smaller_three_and_greater_zero?(@fun)
+    return @fun *= 2 if level_duplicate?(@hygiene, @food, @fun)
     return @fun += 1 if level_max_different_than?(@hygiene, @food) && @fun < 4
     return @fun += 1 if level_max_two_item?(@hygiene, @food) && level_item_equal_three_or_zero?(@fun)
   end
 
   def time_food
-    return @food *= 2 if level_max_two_item?(@hygiene, @fun) && level_item_smaller_three_and_greater_zero?(@food)
+    return @food *= 2 if level_duplicate?(@hygiene, @fun, @food)
     return @food += 1 if level_max_different_than?(@hygiene, @fun) && @food < 4
     return @food += 1 if level_max_two_item?(@hygiene, @fun) && level_item_equal_three_or_zero?(@food)
   end
@@ -62,6 +62,12 @@ class Necessity
 
   def level_item_smaller_three_and_greater_zero?(item)
     return true if item < 3 && item > 0
+
+    false
+  end
+
+  def level_duplicate?(item1, item2, item3)
+    return true if level_max_two_item?(item1, item2) && level_item_smaller_three_and_greater_zero(item3)
 
     false
   end
