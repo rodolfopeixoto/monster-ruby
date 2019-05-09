@@ -2,7 +2,7 @@ require 'byebug'
 
 class Necessity
 
-  attr_accessor :food, :fun, :hygiene
+  attr_reader :food, :fun, :hygiene
 
   def initialize
     @food = 0
@@ -25,23 +25,33 @@ class Necessity
   end
 
   def time_hygiene
+    return @hygiene *= 2 if (@food == 4 || @fun == 4) && @hygiene < 3 && @hygiene > 0
+    return @hygiene += 1 if (@food != 4 || @fun != 4) && @hygiene < 4
+    return @hygiene += 1 if (@food == 4 || @fun == 4) && (@hygiene == 3 || @hygiene.zero?)
   end
 
   def time_fun
-    @fun += 1
+    return @fun *= 2 if (@hygiene == 4 || @food == 4) && @fun < 3 && @fun > 0
+    return @fun += 1 if (@hygiene != 4 || @food != 4) && @fun < 4
+    return @fun += 1 if (@hygiene == 4 || @food == 4) && (@fun == 3 || @fun.zero?)
   end
 
   def time_food
+    return @food *= 2 if (@hygiene == 4 || @fun == 4) && @food < 3 && @food > 0
+    return @food += 1 if (@hygiene != 4 || @fun != 4) && @food < 4
+    return @food += 1 if (@hygiene == 4 || @fun == 4) && (@food == 3 || @food.zero?)
   end
 
   def level_max
     return true if @food == 4 && @fun == 4 && @hygiene == 4
-    return false
+
+    false
   end
 
   def check_level
     return true if @food == 4 || @fun == 4 || @hygiene == 4
-    return false
+
+    false
   end
 
   def double_hygiene

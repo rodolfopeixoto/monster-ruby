@@ -11,8 +11,12 @@ class Monster
     @name
   end
 
+  def show_life
+    (Time.now.to_i - @life.to_i)
+  end
+
   def death
-    puts "#{@life - Time.now}"
+    puts "Tempo de vida: #{show_life} segundos"
     puts 'Seu bichinho morreu, tente novamente'
   end
 end

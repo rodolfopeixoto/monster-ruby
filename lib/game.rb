@@ -1,5 +1,6 @@
 require './lib/monster'
 require './lib/necessity'
+require './lib/time_stage'
 
 class Game
   def initialize
@@ -10,86 +11,125 @@ class Game
   end
 
   def initialize_thread
-    # @thread1 = Thread.new do
-    #   until @necessity.level_max do
-    #     puts "[PASSADO] O nível de comida estava em: #{@necessity.hygiene}"
-    #     sleep 50
-    #     @necessity.time_hygiene
-    #     puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
-    #   end
-    # end
-
-    # @thread2 = Thread.new do
-    #   until @necessity.level_max do
-    #     puts "[PASSADO]  O nível de comida estava em: #{@necessity.food}"
-    #     sleep 30
-    #     @necessity.time_food
-    #     puts "[PRESENTE] O nível de comida está em: #{@necessity.food}"
-    #   end
-    # end
-
-    @thread3 = Thread.new do
-      until @necessity.level_max do
-        puts "[PASSADO] O nível de diversão estava em: #{@necessity.fun}"
-        sleep 10
-        @necessity.time_fun
-        puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
+    @thread1 = Thread.new do
+      time = TimeStage.new
+      time.every_so_many_seconds(50) do
+        break if level_max?
+        puts "=============================================================="
+        puts "[PASSADO] O nível de higiêne estava em: #{@necessity.hygiene}"
+        @necessity.time_hygiene
+        puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
+        puts "=============================================================="
       end
-      @options = 4 if @necessity.level_max
     end
 
-    @thread_check = Thread.new do
-      until @necessity.level_max do
-        @options = gets.chomp
+    @thread2 = Thread.new do
+      time = TimeStage.new
+      time.every_so_many_seconds(30) do
+        break if level_max?
+        puts "=============================================================="
+        puts "[PASSADO] O nível de comida estava em: #{@necessity.food}"
+        @necessity.time_food
+        puts "[PRESENTE] O nível de comida está em: #{@necessity.food}"
+        puts "=============================================================="
       end
-      @options = 4
+    end
+
+    @thread3 = Thread.new do
+      time = TimeStage.new
+      time.every_so_many_seconds(10) do
+        endgame
+        break if level_max?
+        puts "=============================================================="
+        puts "[PASSADO] O nível de diversão estava em: #{@necessity.fun}"
+        @necessity.time_fun
+        puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
+        puts "=============================================================="
+      end
     end
   end
 
   def initialize_game
-    # puts 'Iniciando...'
-    # puts '------ Seja Bem vindo ------'
+    puts ''
+    puts 'Iniciando...'
+    puts '----Instruções----'
+    puts 'A qualquer momento você poderá digiter a necessidade'
+    puts "O monstrinho #{@monster.name} nasceu."
+    puts '------ Seja Bem vindo ------'
+    puts ''
   end
 
   def menu_options
-    # puts '================================================================================='
-    # puts '=================[1] - Alimentar - [2] Brincar - [3] Banho ======================'
-    # puts '================================================================================'
-    # puts 'Qual necessidade você deseja?'
-    # puts ''
+    puts '=[1] - Alimentar - [2] Brincar - [3] Banho ='
+    print 'Digite sua necessidade: '
+    puts ''
+  end
+
+  def level_max?
+    return true if @necessity.level_max
+
+    false
   end
 
   def options_game
-    until @necessity.level_max do
-      # @necessity.eat if @options.to_i == 1
-      # @necessity.amuse if @options.to_i == 2
-      # @necessity.sanitize if @options.to_i == 3
-      # 'Opção errada.' if @options != 1 || @options != 2 || @options != 3 || @options != 4
-      # break if @options.to_i == 4
-      puts "Level(options_game): #{@necessity.level_max}"
-      puts "Options valor(options_game): #{@options}"
+    until level_max? do
+      menu_options
+      options = gets.chomp
+
+      case options.to_i
+      when 1
+        break if level_max?
+
+        @necessity.eat
+        puts "--------------------------------------------------------"
+        puts "[PRESENTE] O nível de food está em: #{@necessity.food}"
+        puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
+        puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
+        puts "--------------------------------------------------------"
+      when 2
+        break if level_max?
+
+        @necessity.amuse
+        puts "--------------------------------------------------------"
+        puts "[PRESENTE] O nível de food está em: #{@necessity.food}"
+        puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
+        puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
+        puts "--------------------------------------------------------"
+      when 3
+        break if level_max?
+
+        @necessity.sanitize
+        puts "--------------------------------------------------------"
+        puts "[PRESENTE] O nível de food está em: #{@necessity.food}"
+        puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
+        puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
+        puts "--------------------------------------------------------"
+      when 4
+        break
+      else
+        puts 'Opção errada.'
+        break if level_max?
+      end
     end
     exit_game_threads
   end
 
   def exit_game_threads
-    if @necessity.level_max
-      # @thread1.exit
-      # @thread2.exit
-      # @thread3.exit
-      # @thread_check.exit
-    end
+    @thread1.exit
+    @thread2.exit
+    @thread3.exit
+  end
+
+  def endgame
+    @monster.death if level_max?
   end
 
   def start
     initialize_thread
     initialize_game
-    menu_options
     options_game
-    monster.death
   end
 end
-
 
 
 
