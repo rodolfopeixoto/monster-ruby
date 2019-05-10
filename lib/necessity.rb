@@ -67,7 +67,7 @@ class Necessity
   end
 
   def level_duplicate?(item1, item2, item3)
-    return true if level_max_two_item?(item1, item2) && level_item_smaller_three_and_greater_zero(item3)
+    return true if level_max_two_item?(item1, item2) && level_item_smaller_three_and_greater_zero?(item3)
 
     false
   end

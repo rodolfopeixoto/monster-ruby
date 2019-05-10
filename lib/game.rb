@@ -71,8 +71,16 @@ class Game
     false
   end
 
+  def show_level
+    puts "--------------------------------------------------------"
+    puts "[PRESENTE] O nível de food está em: #{@necessity.food}"
+    puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
+    puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
+    puts "--------------------------------------------------------"
+  end
+
   def options_game
-    until level_max? do
+    until level_max?
       menu_options
       options = gets.chomp
 
@@ -81,29 +89,17 @@ class Game
         break if level_max?
 
         @necessity.eat
-        puts "--------------------------------------------------------"
-        puts "[PRESENTE] O nível de food está em: #{@necessity.food}"
-        puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
-        puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
-        puts "--------------------------------------------------------"
+        show_level
       when 2
         break if level_max?
 
         @necessity.amuse
-        puts "--------------------------------------------------------"
-        puts "[PRESENTE] O nível de food está em: #{@necessity.food}"
-        puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
-        puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
-        puts "--------------------------------------------------------"
+        show_level
       when 3
         break if level_max?
 
         @necessity.sanitize
-        puts "--------------------------------------------------------"
-        puts "[PRESENTE] O nível de food está em: #{@necessity.food}"
-        puts "[PRESENTE] O nível de diversão está em: #{@necessity.fun}"
-        puts "[PRESENTE] O nível de higiêne está em: #{@necessity.hygiene}"
-        puts "--------------------------------------------------------"
+        show_level
       when 4
         break
       else
@@ -130,7 +126,6 @@ class Game
     options_game
   end
 end
-
 
 
 

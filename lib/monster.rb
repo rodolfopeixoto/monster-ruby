@@ -1,14 +1,11 @@
 require 'byebug'
 
 class Monster
+  attr_reader :name
 
   def initialize(name)
     @name = name
     @life = Time.now
-  end
-
-  def name
-    @name
   end
 
   def show_life
